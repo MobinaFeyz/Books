@@ -1,9 +1,9 @@
-import {ActivityIndicator, FlatList, Image, Text, View} from "react-native";
+import {ActivityIndicator, FlatList, Text, View} from "react-native";
 import "../../global.css";
 import SearchBar from "../../components/SearchBar";
 import {router} from "expo-router";
 import {fetchBooks} from "@/services/api";
-import {useFetch} from "../../services/useFetch";
+import {useFetch} from "@/services/useFetch";
 import BookView from "@/components/BookView";
 import {useEffect, useState} from "react";
 import DropDownList from "@/components/DropDownList";
@@ -32,15 +32,11 @@ export default function Index() {
 
     const [GenreList, setGenreList] = useState(["", "Romance", "History", "Fantasy", "Art", "Science Fiction", "Biographies", "Recipes", "Textbooks", "Children", "Medicine", "Mystery And Detective Stories", "Plays", "Science", "Music"]);
 
-
-
-
     return (
         <View className="flex-1 items-center bg-blue-100 h-full">
-            <SearchBar value={searchText} onTextChange={searchHandle}  onPress={()=> router.push({ pathname: '/search', params: { focus: 'true' } })} />
+            <SearchBar value={searchText} onTextChange={searchHandle} onPress={()=> router.push({ pathname: '/search', params: { focus: 'true' } })} />
 
             <DropDownList selectedValue={selectedGenre} onValueChange={setSelectedGenre} text={"Select Genre"} values={GenreList}/>
-
 
             {booksLoading && <><Text>{"Loading..."}</Text>
             <ActivityIndicator className="self-center" size="large" color="blue" />
@@ -62,6 +58,7 @@ export default function Index() {
                     renderItem={({ item }) => (
                         <BookView
                             title={item.title}
+                            ol={item.cover_edition_key||item.key.replace("/works/","")}
                             imageUrl={item.cover_id || item.cover_i}
                             author={item.authors?.[0]?.name || item.author_name?.[0] || "Unknown Author"}
                         />

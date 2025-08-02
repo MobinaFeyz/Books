@@ -2,7 +2,6 @@ import React from "react";
 import {Text, View} from "react-native";
 import {Picker} from "@react-native-picker/picker";
 
-
 interface DropDownListProps {
     selectedValue: string;
     onValueChange: (selectedValue: string) => void;

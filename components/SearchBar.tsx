@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect} from "react";
+import React, {forwardRef} from "react";
 import { Image, TextInput, TextInputProps, View } from "react-native";
 
 interface SearchBarProps extends TextInputProps {

@@ -21,3 +21,25 @@ export const fetchBooks = async ({query, genre}:{query: string, genre: string}) 
     if (data.works) return data.works;
     return [];
 }
+
+export const fetchBookDetails = async (bookId: string) => {
+
+    let endpoint = `${OPENLIBRARY_CONFIG.BASE_URL}/books/${bookId}.json`;
+    let response = await fetch(endpoint, {
+        method: "GET",
+        headers: OPENLIBRARY_CONFIG.headers,
+    });
+    if(!response)
+        endpoint = `${OPENLIBRARY_CONFIG.BASE_URL}/works/${bookId}.json`;
+    response = await fetch(endpoint, {
+        method: "GET",
+        headers: OPENLIBRARY_CONFIG.headers,
+    });
+
+    if(!response.ok) {
+        throw new Error(response.statusText);
+    }
+    const data = await response.json();
+    if(data)
+        return data;
+}

@@ -61,7 +61,7 @@ const Search =() =>
             <FlatList
                 data={books}
                 renderItem={({item})=>(
-                <BookView title={item.title} imageUrl={item.cover_i} author={item.author_name} />
+                <BookView title={item.title} imageUrl={item.cover_i} author={item.author_name} ol={item.cover_edition_key||item.key.replace("/works/","")}/>
                 )}
                 keyExtractor={(item, index) => item.key || index.toString()}
                 numColumns={3}
