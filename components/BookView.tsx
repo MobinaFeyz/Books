@@ -1,5 +1,5 @@
 import {Image, View, Text, TouchableOpacity} from "react-native";
-import {Link, router} from "expo-router";
+import {router} from "expo-router";
 
 interface BookProps{
     title: string;
@@ -10,7 +10,6 @@ interface BookProps{
 
 const BookView = ({title, imageUrl, author, ol}: BookProps) => {
     return(
-        // <Link href={'./book/BookInfo'} asChild>
         <TouchableOpacity className="flex-col items-center m-4 w-1/4" onPress={() => router.push({ pathname: '../book/BookInfo', params: { id: ol, author: author } })}
         >
             <Image source={{uri:`https://covers.openlibrary.org/b/id/${imageUrl}-M.jpg`}} className="w-full h-48 rounded-lg"
@@ -18,7 +17,6 @@ const BookView = ({title, imageUrl, author, ol}: BookProps) => {
             <Text className="text-sm font-bold mt-2 text-center" numberOfLines={3} style={{fontSize:15}}>{title}</Text>
             <Text className="text-black text-center" numberOfLines={2}>{author}</Text>
         </TouchableOpacity>
-        // </Link>
     );
 }
 export default BookView;

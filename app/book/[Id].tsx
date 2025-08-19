@@ -1,7 +1,6 @@
 import React from "react";
-import {View, Image, SafeAreaView, ActivityIndicator, Animated, Text} from "react-native";
+import {View, Image, SafeAreaView, ActivityIndicator, Animated, Text, TouchableOpacity} from "react-native";
 import {useLocalSearchParams} from "expo-router";
-import Button from "@/components/Button"
 import {useFetch} from "@/services/useFetch";
 import {fetchBookDetails} from "@/services/api";
 import ScrollView = Animated.ScrollView;
@@ -10,7 +9,6 @@ import Description from "@/components/Description";
 const Details = () => {
     const {id, author} = useLocalSearchParams();
     const {data: book, loading, error} = useFetch(() => fetchBookDetails(id as string));
-    // console.log(author);
         return (
             <SafeAreaView className="flex-1 pb-safe">
                 {loading && <><Text className="text-center text-2xl mt-4">{"Loading..."}</Text>
@@ -41,8 +39,12 @@ const Details = () => {
                             <Description description={book.description} />
                         )}
 
-                        <Button title={"Want To Read"}></Button>
-                        <Button title={"Already Read"}></Button>
+                        <TouchableOpacity className={"self-center w-2/3 h-14 bg-blue-900 rounded-full justify-center align-middle m-1.5"}>
+                            <Text className="text-white text-center">{"Want to read"}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className={"self-center w-2/3 h-14 bg-blue-900 rounded-full justify-center align-middle m-1.5 mb-16"}>
+                            <Text className="text-white text-center">{"Already read"}</Text>
+                        </TouchableOpacity>
                     </ScrollView>
                 )}
 

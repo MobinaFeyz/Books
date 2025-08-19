@@ -1,7 +1,7 @@
 import React from "react";
 import {Tabs} from "expo-router";
 import "../../global.css";
-import {Image, ImageBackground, SafeAreaView, Text, View} from "react-native";
+import {Image, ImageBackground, Text, View} from "react-native";
 import HomeIcon from '../../assets/images/home.png';
 import SearchIcon from '../../assets/images/search.png';
 import ForYouIcon from '../../assets/images/forYou.png';
@@ -22,6 +22,7 @@ const TabIcon = ({icon, title, focused}: any) => {
         </View>
     )
 }
+
 const _Layout = () =>{
     return (
         <Tabs screenOptions={{

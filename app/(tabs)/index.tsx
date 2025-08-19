@@ -52,8 +52,8 @@ export default function Index() {
                     columnWrapperStyle={{
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: 15
+                        alignItems: 'flex-start',
+                        gap: 10
                     }}
                     renderItem={({ item }) => (
                         <BookView

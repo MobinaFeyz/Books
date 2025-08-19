@@ -4,7 +4,8 @@ import SearchBar from "@/components/SearchBar";
 import {useFetch} from "@/services/useFetch";
 import {fetchBooks} from "@/services/api";
 import BookView from "@/components/BookView";
-import {useFocusEffect, useLocalSearchParams} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
+import {updateSearchCount} from "@/services/appwrite";
 const Search =() =>
 {
     const {focus} = useLocalSearchParams();
@@ -40,9 +41,18 @@ const Search =() =>
         if(focus === 'true' && searchRef.current){
             setTimeout(()=>{
                 searchRef.current?.focus();
+                router.setParams({ focus: "false" });
             },100)
         }
     }, [focus]);
+
+    useEffect(() => {
+        if(books?.length> 0 && books?.[0]){
+            setTimeout(()=> {
+                updateSearchCount(searchTerm, books[0]);
+            }, 400);
+        }
+    }, [books]);
 
 
     return (
@@ -68,7 +78,7 @@ const Search =() =>
                 columnWrapperStyle={{
                     display: 'flex',
                     justifyContent: 'center',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     gap: 15
                 }}       />
         )}
