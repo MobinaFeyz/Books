@@ -9,3 +9,13 @@ interface Book{
     cover_edition_key: string;
     key: string;
 }
+
+
+interface UserBooks{
+    id: string;
+    userID: string;
+    bookID: string;
+    status: string;
+    review: string;
+    rating: number;
+}

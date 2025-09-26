@@ -49,8 +49,8 @@ const Search =() =>
     useEffect(() => {
         if(books?.length> 0 && books?.[0]){
             setTimeout(()=> {
-                updateSearchCount(searchTerm, books[0]);
-            }, 400);
+                updateSearchCount(searchTerm.toLowerCase(), books[0]);
+            }, 1000);
         }
     }, [books]);
 

@@ -1,14 +1,18 @@
 import React from "react";
-import {View, Image, SafeAreaView, ActivityIndicator, Animated, Text, TouchableOpacity} from "react-native";
+import {View, Image, SafeAreaView, ActivityIndicator, Animated, Text, TouchableOpacity, TextInput} from "react-native";
 import {useLocalSearchParams} from "expo-router";
 import {useFetch} from "@/services/useFetch";
 import {fetchBookDetails} from "@/services/api";
 import ScrollView = Animated.ScrollView;
 import Description from "@/components/Description";
+import {saveUserData} from "@/services/appwrite";
+import {useState} from "react";
 
 const Details = () => {
     const {id, author} = useLocalSearchParams();
     const {data: book, loading, error} = useFetch(() => fetchBookDetails(id as string));
+    const [showMyReview, setShowMyReview] = useState(false);
+
         return (
             <SafeAreaView className="flex-1 pb-safe">
                 {loading && <><Text className="text-center text-2xl mt-4">{"Loading..."}</Text>
@@ -32,6 +36,7 @@ const Details = () => {
                                 {book.languages && <Text>Language: {book.languages?.[0].key.replace("/languages/","").toUpperCase()}</Text>}
                                 {book.isbn_13 && <Text>ISBN 13: {book.isbn_13}</Text>}
                                 {book.subjects && <Text>Subjects:{"\n"}{book.subjects.slice(0,5).join(", ")},...</Text>}
+                                {/*{<Text>{book.key.split("/").pop()}</Text>}*/}
                             </View>
                         </View>
 
@@ -39,10 +44,23 @@ const Details = () => {
                             <Description description={book.description} />
                         )}
 
-                        <TouchableOpacity className={"self-center w-2/3 h-14 bg-blue-900 rounded-full justify-center align-middle m-1.5"}>
+                        {showMyReview && (
+                            <TextInput
+                                editable={true}
+                                multiline
+                                numberOfLines={4}
+                                textAlignVertical="top"
+                                className="text-lg px-3 color-black bg-white rounded w-full min-h-32 text-justify mb-6" placeholder="Write your review about this book..."/>
+                        )}
+
+                        <TouchableOpacity className={"self-center w-2/3 h-14 bg-blue-900 rounded-full justify-center align-middle m-1.5"} onPress={()=> saveUserData(book, "wants_to_read")}>
                             <Text className="text-white text-center">{"Want to read"}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className={"self-center w-2/3 h-14 bg-blue-900 rounded-full justify-center align-middle m-1.5 mb-16"}>
+                        <TouchableOpacity className={"self-center w-2/3 h-14 bg-blue-900 rounded-full justify-center align-middle m-1.5 mb-16"} onPress={()=> {
+                            saveUserData(book, "already_read");
+                            setShowMyReview(true);
+                            }
+                        }>
                             <Text className="text-white text-center">{"Already read"}</Text>
                         </TouchableOpacity>
                     </ScrollView>

@@ -15,7 +15,7 @@ const Description = ({ description }: { description?: string | { value: string }
     const previewText = desc.length > 150 ? desc.slice(0, 150) + "..." : desc;
 
     return (
-        <View className="mb-16 mx-2.5">
+        <View className="mb-10 mx-2.5">
             <Text className="text-base text-gray-800 text-justify">
                 {showFull ? desc : previewText}
             </Text>

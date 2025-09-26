@@ -8,7 +8,7 @@ const Login = () => {
     const [password, setPassword] = useState<string>("");
 
     const validateEmail = (email: string): boolean => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     };
 
@@ -28,11 +28,6 @@ const Login = () => {
             Alert.alert("Error login in to your account: "+ error);
             throw error;
         }
-        // try {
-        //     await account.deleteSession("current");
-        // } catch (error) {
-        //     console.error("Logout error:", error);
-        // }
     };
     const TextInputClassName = "bg-blue-800 rounded-full px-4 w-4/5 h-16 text-white";
     return (
