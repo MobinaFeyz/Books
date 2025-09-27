@@ -30,7 +30,6 @@ export default function RootLayout() {
 
   return (
       <Stack>
-
           <Stack.Screen
               name="Screens/Login"
               options={{headerShown: false}}/>
@@ -44,7 +43,6 @@ export default function RootLayout() {
         <Stack.Screen
           name="book/[Id]"
           options={{ headerTitle: "Book Details"}}/>
-
       </Stack>
   );
 }

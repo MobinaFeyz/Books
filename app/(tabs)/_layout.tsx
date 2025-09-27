@@ -41,7 +41,7 @@ const _Layout = () =>{
                 marginBottom: 40,
                 height: 55,
                 overflow: 'hidden',
-            }
+            },
         }}>
             <Tabs.Screen
                 name="index"
@@ -50,7 +50,7 @@ const _Layout = () =>{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <TabIcon focused={focused} title="Home" icon={HomeIcon}/>
-                    )
+                    ),
                 }}
                 />
 

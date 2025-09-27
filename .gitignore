@@ -37,3 +37,9 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# ignore env files
+.env
+
+# ignore test data
+test.json

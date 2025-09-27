@@ -71,3 +71,7 @@ export const getUserData = async(): Promise<UserBooks[]|undefined> => {
         throw error;
     }
 }
+
+export const deleteRecord = async (book: Book): Promise<void> => {
+
+}

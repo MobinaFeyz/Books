@@ -1,62 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, StatusBar, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import {ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFetch} from "@/services/useFetch";
 import {account} from "@/services/appwrite";
 import {router} from "expo-router";
 import {fetchBookDetails} from "@/services/api";
 import {getUserData} from "@/services/appwrite";
-
-type ItemData = {
-    id: string;
-    title: string;
-};
-
-const DATA: ItemData[] = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-];
-
-type ItemProps = {
-    item: ItemData;
-    onPress: () => void;
-    backgroundColor: string;
-    textColor: string;
-};
-
-const Item = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-        <Text style={[styles.title, {color: textColor}]}>{item.title}</Text>
-    </TouchableOpacity>
-);
+import BooksList from "@/components/BooksList";
 
 const Profile = () => {
-    const [selectedId, setSelectedId] = useState<string>();
     const {data, loading, error} = useFetch(() => getUserData());
-    const[usersWantToReadBooks, setUsersWantToReadBooks] = useState<string[]>([]);
+    const[usersWantToReadBookIDs, setUsersWantToReadBookIDs] = useState<string[]>([]);
+    const[usersWantToReadBooks, setUsersWantToReadBooks] = useState<any[]>([]);
+    const [usersEmail, setUsersEmail] = useState<string>("");
+
     useEffect(() => {
         if(!data) return;
-        setUsersWantToReadBooks(data.filter((item)=> item.status==="wants_to_read").map((item)=> item.bookID));
+        const IDs = data.filter((item)=> item.status==="wants_to_read").map((item)=> item.bookID);
+        setUsersWantToReadBookIDs(IDs);
 
-        // usersWantToReadBooks.forEach(value => {
-        //     const {data, loading, error} = useFetch(()=> fetchBookDetails(value));
-        // })
+        const fetchBooks = async () => {
+            try {
+                const results = await Promise.all(IDs.map((id) => fetchBookDetails(id)));
+                setUsersWantToReadBooks(results);
+            } catch (err) {
+                console.error("Failed to fetch books", err);
+            }
+        };
+        fetchBooks();
     },[data]);
 
     useEffect(() => {
         const checkSession = async () => {
             try {
                 const session = await account.get();
+                if(session) {
+                    setUsersEmail(session.email);
+                }
             } catch (error) {
                 router.push("../Screens/Login");
             }
@@ -73,50 +53,39 @@ const Profile = () => {
         }
     }
 
-
-    const renderItem = ({item}: {item: ItemData}) => {
-        const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
-        const color = item.id === selectedId ? 'white' : 'black';
-
-        return (
-            <Item
-                item={item}
-                onPress={() => setSelectedId(item.id)}
-                backgroundColor={backgroundColor}
-                textColor={color}
-            />
-        );
-    };
-
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.container}>
-                <TouchableOpacity className="mx-auto mt-12 bg-blue-950 rounded w-1/4 h-16 items-center justify-center" onPress={logoutHandle}><Text className="text-white text-3xl text-center">{"Logout"}</Text>
-                </TouchableOpacity>
-                <FlatList
-                    data={DATA}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    extraData={selectedId}
-                />
-            </SafeAreaView>
-        </SafeAreaProvider>
+        <SafeAreaView className="flex-1 p-2.5 bg-blue-100 h-full">
+            {loading && (
+                <>
+                    <Text>Loading...</Text>
+                    <ActivityIndicator className="self-center" size="large" color="blue" />
+                </>
+            )}
+
+            {error && <Text className="text-red-800">Error: {error.message}</Text>}
+
+            {usersWantToReadBooks && usersWantToReadBooks.length > 0 && (
+                <>
+                    <View className="rounded h-20 p-1 mb-6" style={{
+                        justifyContent: "space-between",
+                        flexDirection: "row-reverse",
+                        alignItems:"center",
+                        backgroundColor: "#005A9C",
+                    }}>
+                        <TouchableOpacity
+                            className="bg-blue-950 rounded w-1/4 items-center justify-center h-16"
+                            onPress={logoutHandle} >
+                            <Text className="text-white text-3xl text-center">Logout</Text>
+                        </TouchableOpacity>
+                        {usersEmail && (<Text className="ml-2 text-2xl italic color-white">Signed in as:{"\n" + usersEmail}</Text>)}
+                    </View>
+
+                    <BooksList books={usersWantToReadBooks} title={"Your Books To Read"}></BooksList>
+
+                </>
+            )}
+        </SafeAreaView>
     );
+
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
-    },
-    item: {
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-    },
-    title: {
-        fontSize: 32,
-    },
-});
-
 export default Profile;
